@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>React组件代码执行</title>
+  <script src="https://cdn.bootcdn.net/ajax/libs/react/17.0.2/umd/react.development.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/react-dom/17.0.2/umd/react-dom.development.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+  <style>
+    main {
+      width: 500px;
+      margin: 0 auto;
+      padding: 10px;
+    }
+
+    .search-box {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      width: 100%;
+    }
+
+    .search-box button {
+      height: 100%;
+      width: 100px;
+      margin: 5px;
+      background-color: #4e6ef2;
+      border: 1px solid #4e6ef2;
+      line-height: 30px;
+      border-radius: 5px;
+      color: #FFF;
+    }
+
+    textarea {
+      flex: 1;
+      border-color: #4e6ef2;
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .result {
+      background: #EEE;
+      padding: 10px;
+      border-radius: 5px;
+      color: #333;
+      width: 80%;
+      margin: 10px auto;
+    }
+
+    .result .user {
+      color: green;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <div id="root"></div>
+  </main>
+  <script type="text/babel">
+    const { useState } = React;
+    function Input({ label, onSearch }) {
+      const [value, setValue] = useState(value);
+      return (
+        <div className="search-box">
+          <textarea onChange={v => setValue(v)} cols="25" rols="3" />
+          <button onClick={() => {
+            onSearch(value);
+            setValue('');
+          }}>{label}</button>
+        </div>
+      )
+    }
+
+
+
+    function SearchPage() {
+      const [messages, setMessages] = useState([]);
+      const handleSearch = async (evt) => {
+        const content = evt.target.value
+        const headers = {
+          "Content-Type": "application/json"
+        }
+        messages.push({
+          role: "user",
+          content: content
+        })
+        const params = {
+          messages
+        };
+        setMessages([].concat(messages))
+        const response = await fetch('/api/chat', { method: "POST", headers, body: JSON.stringify(params) });
+        const data = await response.text();
+        if (data) {
+          messages.push({
+            role: "assistant",
+            content: data
+          });
+          setMessages([].concat(messages));
+        }
+      };
+
+      return (
+        <div>
+          <Input label="确定" onSearch={handleSearch} />
+          <br />
+          <div className="content">
+            {
+              messages.map((message) => {
+                return (
+                  <div className="result">
+                    {message.content.split('\n').map((line, index) => (
+                      <div key={index} className={message.role}>
+                        {line}
+                      </div>
+                    ))}
+                  </div>
+                )
+              })
+            }
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<SearchPage />, document.getElementById('root'));
+  </script>
+</body>
+
+</html>

@@ -5,8 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.APIHandler = exports.queryRelated = exports.queryDB = void 0;
 const milvus2_sdk_node_1 = require("@zilliz/milvus2-sdk-node");
-const util_1 = require("../modules/dochain/db/util");
-const Zillis_1 = __importDefault(require("../modules/dochain/db/Zillis"));
+const util_1 = require("../../modules/dochain/db/util");
+const Zillis_1 = __importDefault(require("../../modules/dochain/db/Zillis"));
 const queryDB = async (base = 'pet', querys) => {
     const db = new Zillis_1.default(base);
     db.outputFileds = ['content', 'metadata'];

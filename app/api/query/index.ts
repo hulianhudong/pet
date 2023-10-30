@@ -1,7 +1,7 @@
 import { MilvusClient } from '@zilliz/milvus2-sdk-node';
-import { textEmbedding } from '../modules/dochain/db/util';
+import { textEmbedding } from '../../modules/dochain/db/util';
 
-import Zilliz from '../modules/dochain/db/Zillis';
+import Zilliz from '../../modules/dochain/db/Zillis';
 
 export const queryDB = async (base: string = 'pet', querys: string[]) => {
   const db = new Zilliz(base);

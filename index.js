@@ -4,7 +4,8 @@ const logger = require('koa-logger');
 const bodyParser = require('koa-bodyparser');
 const fs = require('fs');
 const path = require('path');
-const { queryDB } = require('./src/api/index');
+const { queryDB } = require('./src/api/query');
+const { Chat } = require('./src/api/chat');
 const koaStatic = require('koa-static');
 
 // 静态资源目录的路径
@@ -41,6 +42,13 @@ router.all('/api/search', async (ctx) => {
     code: 0,
     data: result,
   };
+});
+
+// 会话聊天
+router.all('/api/chat', async (ctx) => {
+  const { body } = ctx.request;
+  const compeletion = await Chat(body);
+  ctx.body = compeletion;
 });
 
 // 首页

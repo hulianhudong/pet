@@ -12,24 +12,26 @@
     "node": ">=12.0.0"
   },
   "dependencies": {
-    "body-parser": "^1.19.1",
-    "koa": "^2.13.4",
-    "koa-bodyparser": "^4.3.0",
-    "koa-logger": "^3.2.1",
-    "koa-router": "^10.1.1",
-    "mysql2": "^2.3.3",
     "@types/koa": "^2.13.10",
+    "@vercel/kv": "^0.2.3",
     "@zilliz/milvus2-sdk-node": "^2.3.3",
     "axios": "^1.6.0",
+    "body-parser": "^1.19.1",
     "chromadb": "^1.5.11",
     "dochain": "^1.0.5",
+    "koa": "^2.13.4",
+    "koa-bodyparser": "^4.3.0",
     "koa-jwt": "^4.0.4",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^10.1.1",
     "koa-static": "^5.0.0",
     "koa2-cors": "^2.0.6",
     "langchain": "^0.0.175",
+    "mysql2": "^2.3.3",
+    "nanoid": "^5.0.2",
     "proxy-from-env": "^1.1.0",
+    "sequelize": "^6.13.0",
     "shell": "^0.5.1",
-    "typescript": "^5.2.2",
-    "sequelize": "^6.13.0"
+    "typescript": "^5.2.2"
   }
 }
