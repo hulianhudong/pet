@@ -1,67 +1,63 @@
-const Koa = require("koa");
-const Router = require("koa-router");
-const logger = require("koa-logger");
-const bodyParser = require("koa-bodyparser");
-const fs = require("fs");
-const path = require("path");
-const { init: initDB, Counter } = require("./db");
+const Koa = require('koa');
+const Router = require('koa-router');
+const logger = require('koa-logger');
+const bodyParser = require('koa-bodyparser');
+const fs = require('fs');
+const path = require('path');
+const { queryDB } = require('./src/api/index');
+const koaStatic = require('koa-static');
+
+// 静态资源目录的路径
+const staticPath = path.join(__dirname, 'public');
 
 const router = new Router();
 
-const homePage = fs.readFileSync(path.join(__dirname, "index.html"), "utf-8");
+const homePage = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf-8');
 
-// 首页
-router.get("/", async (ctx) => {
-  ctx.body = homePage;
-});
+const cors = require('koa2-cors');
+
+const app = new Koa();
+
+// 使用 koa-static 中间件
+app.use(koaStatic(staticPath));
+
+// 使用 cors 中间件
+app.use(cors());
+app.use(
+  cors({
+    origin: '*',
+    credentials: true, // 如果需要发送身份凭证，设置为true
+  })
+);
 
 // 更新计数
-router.post("/api/count", async (ctx) => {
+router.all('/api/search', async (ctx) => {
   const { request } = ctx;
-  const { action } = request.body;
-  if (action === "inc") {
-    await Counter.create();
-  } else if (action === "clear") {
-    await Counter.destroy({
-      truncate: true,
-    });
-  }
+  console.log(request.body);
+  const { base = 'pet', content = '猫' } = request.body;
 
-  ctx.body = {
-    code: 0,
-    data: await Counter.count(),
-  };
-});
-
-// 获取计数
-router.get("/api/count", async (ctx) => {
-  const result = await Counter.count();
-
+  const result = await queryDB(base, [content]);
   ctx.body = {
     code: 0,
     data: result,
   };
 });
 
-// 小程序调用，获取微信 Open ID
-router.get("/api/wx_openid", async (ctx) => {
-  if (ctx.request.headers["x-wx-source"]) {
-    ctx.body = ctx.request.headers["x-wx-openid"];
-  }
+// 首页
+router.get('/', async (ctx) => {
+  ctx.body = homePage;
 });
 
-const app = new Koa();
 app
   .use(logger())
   .use(bodyParser())
   .use(router.routes())
   .use(router.allowedMethods());
 
-const port = process.env.PORT || 80;
+const port = process.env.PORT || 3000; // 80;
 async function bootstrap() {
-  await initDB();
   app.listen(port, () => {
-    console.log("启动成功", port);
+    console.log('启动成功', port);
   });
 }
 bootstrap();
