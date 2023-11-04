@@ -3,14 +3,20 @@ import { textEmbedding } from '../../modules/dochain/db/util';
 
 import Zilliz from '../../modules/dochain/db/Zillis';
 
-export const queryDB = async (base: string = 'pet', querys: string[]) => {
-  const db = new Zilliz(base);
+import { victor_conf } from '../../modules/dochain/config';
+
+const { COLLECTION } = victor_conf;
+const db = new Zilliz(COLLECTION);
+export const queryDB = async (content: string) => {
   db.outputFileds = ['content', 'metadata'];
-  const result = await db.queryByEmbeddings(querys[0]);
+  const result = await db.queryByEmbeddings(content);
   return result;
 };
 
-export const queryRelated = async (texts: string[]) => {
+export const queryRelated = async (
+  texts: string[],
+  base: string = COLLECTION
+) => {
   const {
     ZILLIZ_ENDPOINT = '',
     ZILLIZ_USER = '',
@@ -18,9 +24,6 @@ export const queryRelated = async (texts: string[]) => {
   } = process.env;
 
   const ssl = false;
-
-  console.log(ZILLIZ_ENDPOINT, ZILLIZ_PASS);
-
   const client = new MilvusClient({
     address: ZILLIZ_ENDPOINT,
     ssl,
@@ -30,7 +33,7 @@ export const queryRelated = async (texts: string[]) => {
 
   const embeddings = await textEmbedding({ texts });
   const result = await client.search({
-    collection_name: 'pet',
+    collection_name: base,
     vector: embeddings.map((m: any) => m.embedding),
     output_fields: ['content', 'metadata'],
     limit: 3,

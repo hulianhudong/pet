@@ -40,7 +40,7 @@ const models = ['embedding-v1', 'bge_large_zh', 'bge-large-en'];
 async function getEmbeddings(
   accessToken: string,
   input: string[],
-  model: string = 'embedding-v1'
+  model: string = 'bge_large_zh'
 ): Promise<EmbeddingResponse> {
   const response = await axios.post<EmbeddingResponse>(
     `https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/embeddings/${model}?access_token=${accessToken}`,

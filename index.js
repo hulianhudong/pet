@@ -35,9 +35,9 @@ app.use(
 router.all('/api/search', async (ctx) => {
   const { request } = ctx;
   console.log(request.body);
-  const { base = 'pet', content = '猫' } = request.body;
+  const { base = 'petill', content = '猫' } = request.body;
 
-  const result = await queryDB(base, [content]);
+  const result = await queryDB(content, base);
   ctx.body = {
     code: 0,
     data: result,

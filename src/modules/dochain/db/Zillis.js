@@ -6,9 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Collection = exports.config = void 0;
 const milvus2_sdk_node_1 = require("@zilliz/milvus2-sdk-node");
 const VictorDB_1 = __importDefault(require("./VictorDB"));
-const { ZILLIZ_ENDPOINT = '', ZILLIZ_USER = '', ZILLIZ_TOKEN = '', ZILLIZ_PASS = '', } = process.env;
+const config_1 = require("../config");
+const { ZILLIZ_ENDPOINT = '', ZILLIZ_USER = '', ZILLIZ_PASS = '', EMBEDDING_VENDOR, COLLECTION, } = config_1.victor_conf;
 let address = ZILLIZ_ENDPOINT;
-let token = ZILLIZ_TOKEN || `${ZILLIZ_USER}:${ZILLIZ_PASS}`;
+let token = `${ZILLIZ_USER}:${ZILLIZ_PASS}`;
 if (token.length < 10) {
     console.log('zilliz token is empty');
 }
@@ -57,7 +58,7 @@ class Collection {
     }
 }
 exports.Collection = Collection;
-const default_dimension = process.env.EMBEDDING_VENDOR === 'wenxin' ? 384 : 1536;
+const default_dimension = EMBEDDING_VENDOR === 'wenxin' ? 1024 : 1536;
 class Zillis extends VictorDB_1.default {
     constructor(name) {
         super(name);

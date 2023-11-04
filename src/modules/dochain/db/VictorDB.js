@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const config_1 = require("../config");
 const embedding_1 = __importDefault(require("./embedding"));
 const util_1 = require("./util");
 class MockClient {
@@ -36,7 +37,7 @@ class VictorDB {
         return this.client.listCollections();
     }
     async embedding(queries) {
-        if (process.env.EMBEDDING_VENDOR === 'wenxin') {
+        if (config_1.victor_conf.EMBEDDING_VENDOR === 'wenxin') {
             const queryEmbeddings = await (0, embedding_1.default)({ texts: queries });
             return (queryEmbeddings || []).map((em) => em.embedding);
         }

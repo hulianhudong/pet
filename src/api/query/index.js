@@ -7,17 +7,18 @@ exports.APIHandler = exports.queryRelated = exports.queryDB = void 0;
 const milvus2_sdk_node_1 = require("@zilliz/milvus2-sdk-node");
 const util_1 = require("../../modules/dochain/db/util");
 const Zillis_1 = __importDefault(require("../../modules/dochain/db/Zillis"));
-const queryDB = async (base = 'pet', querys) => {
-    const db = new Zillis_1.default(base);
+const config_1 = require("../../modules/dochain/config");
+const { COLLECTION } = config_1.victor_conf;
+const db = new Zillis_1.default(COLLECTION);
+const queryDB = async (content) => {
     db.outputFileds = ['content', 'metadata'];
-    const result = await db.queryByEmbeddings(querys[0]);
+    const result = await db.queryByEmbeddings(content);
     return result;
 };
 exports.queryDB = queryDB;
-const queryRelated = async (texts) => {
+const queryRelated = async (texts, base = COLLECTION) => {
     const { ZILLIZ_ENDPOINT = '', ZILLIZ_USER = '', ZILLIZ_PASS = '', } = process.env;
     const ssl = false;
-    console.log(ZILLIZ_ENDPOINT, ZILLIZ_PASS);
     const client = new milvus2_sdk_node_1.MilvusClient({
         address: ZILLIZ_ENDPOINT,
         ssl,
@@ -26,7 +27,7 @@ const queryRelated = async (texts) => {
     });
     const embeddings = await (0, util_1.textEmbedding)({ texts });
     const result = await client.search({
-        collection_name: 'pet',
+        collection_name: base,
         vector: embeddings.map((m) => m.embedding),
         output_fields: ['content', 'metadata'],
         limit: 3,

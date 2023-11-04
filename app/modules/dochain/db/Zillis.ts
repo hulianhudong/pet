@@ -1,14 +1,17 @@
 import { MilvusClient } from '@zilliz/milvus2-sdk-node';
 import VictorDB, { Collection as ICollection, Client } from './VictorDB';
 
+import { victor_conf } from '../config';
+
 const {
   ZILLIZ_ENDPOINT = '',
   ZILLIZ_USER = '',
-  ZILLIZ_TOKEN = '',
   ZILLIZ_PASS = '',
-} = process.env;
+  EMBEDDING_VENDOR,
+  COLLECTION,
+} = victor_conf;
 let address = ZILLIZ_ENDPOINT;
-let token = ZILLIZ_TOKEN || `${ZILLIZ_USER}:${ZILLIZ_PASS}`;
+let token = `${ZILLIZ_USER}:${ZILLIZ_PASS}`;
 
 if (token.length < 10) {
   console.log('zilliz token is empty');
@@ -64,8 +67,7 @@ export class Collection implements ICollection {
   }
 }
 
-const default_dimension =
-  process.env.EMBEDDING_VENDOR === 'wenxin' ? 384 : 1536;
+const default_dimension = EMBEDDING_VENDOR === 'wenxin' ? 1024 : 1536;
 
 class Zillis extends VictorDB {
   public client: MilvusClient;

@@ -15,7 +15,7 @@ async function getAccessToken(apiKey, secretKey) {
     return response.data.access_token;
 }
 const models = ['embedding-v1', 'bge_large_zh', 'bge-large-en'];
-async function getEmbeddings(accessToken, input, model = 'embedding-v1') {
+async function getEmbeddings(accessToken, input, model = 'bge_large_zh') {
     const response = await axios_1.default.post(`https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/embeddings/${model}?access_token=${accessToken}`, {
         input,
     });

@@ -1,3 +1,4 @@
+import { victor_conf } from '../config';
 import embeddingText from './embedding';
 import { chat, getHashId, groupArray, textEmbedding, translate } from './util';
 
@@ -63,7 +64,7 @@ class VictorDB {
     return this.client.listCollections();
   }
   async embedding(queries: string[]) {
-    if (process.env.EMBEDDING_VENDOR === 'wenxin') {
+    if (victor_conf.EMBEDDING_VENDOR === 'wenxin') {
       const queryEmbeddings = await embeddingText({ texts: queries });
       return (queryEmbeddings || []).map((em) => em.embedding);
     }
