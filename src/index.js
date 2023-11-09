@@ -12,10 +12,14 @@ const router = new koa_router_1.default();
 // app.use(jwt({ secret: 'auth_token' }).unless({ path: [/^\/api\/login/] }));
 // 使用 cors 中间件
 app.use((0, koa2_cors_1.default)({}));
-// // 静态资源目录的路径
-// const staticPath = path.join(__dirname, '..', 'public');
-// // 使用 koa-static 中间件
-// app.use(koaStatic(staticPath));
+
+
+// 静态资源目录的路径
+const staticPath = path.join(__dirname, '..', 'public');
+
+// 使用 koa-static 中间件
+app.use(koaStatic(staticPath));
+
 // 将所有 api/* 请求转发到 APIHandler 方法
 router.all('/api/hello', async function (ctx, next) {
     console.log(ctx.request.url);
@@ -25,6 +29,7 @@ router.all('/api/hello', async function (ctx, next) {
 // 将路由应用到 Koa 应用
 app.use(router.routes()).use(router.allowedMethods());
 app.use(async (ctx) => {
+    debugger;
     console.log(ctx.request.url);
 });
 app.listen(3001, () => {

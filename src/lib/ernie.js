@@ -1,14 +1,6 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GetChat = void 0;
-const node_fetch_1 = __importDefault(require("node-fetch"));
-if (!globalThis.fetch) {
-    // @ts-ignore
-    globalThis.fetch = node_fetch_1.default;
-}
 const { BAIDU_API_KEY = '', BAIDU_SECRETE_KEY = '' } = process.env;
 // 使用示例
 const defaultConfig = {
@@ -26,7 +18,7 @@ class ChatService {
         const url = `${accessTokenUrl}?grant_type=client_credentials&client_id=${AK}&client_secret=${SK}`;
         console.log(url);
         try {
-            const response = await (0, node_fetch_1.default)(url, {
+            const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -57,7 +49,7 @@ class ChatService {
                 },
                 body: payload,
             };
-            return await (0, node_fetch_1.default)(url, options).then((r) => r.text());
+            return await fetch(url, options).then((r) => r.text());
         }
         catch (error) {
             console.log(error);

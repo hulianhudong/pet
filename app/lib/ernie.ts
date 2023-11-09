@@ -1,10 +1,3 @@
-import fetch from 'node-fetch';
-
-if (!globalThis.fetch) {
-  // @ts-ignore
-  globalThis.fetch = fetch;
-}
-
 interface Config {
   AK: string;
   SK: string;

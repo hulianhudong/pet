@@ -1,0 +1,48 @@
+openapi: 3.0.1
+info:
+    title: 宠物问诊
+    description: 宠物问诊知识库。
+    version: "v1"
+servers:
+    - url: http://127.0.0.1:3000
+paths:
+    /api/search:
+        get:
+            operationId: search
+            summary: 宠物问诊知识库
+            responses:
+                "200":
+                    description: 问诊知识
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/search"
+components:
+    schemas:
+        search:
+            type: object
+            required: [data]
+            properties:
+                data:
+                    type: object
+                    required: [results]
+                    description: 结果列表
+                        type: array
+                        items:
+                            type: object
+                            required: [content, metadata]
+                                content: 
+                                    type: string
+                                    description: 问题描述
+                                metadata:
+                                    type: object
+                                    description: 问诊问题于回答描述
+                                    required: [question, answer]
+                                        question:
+                                            type: string
+                                            description: 问题
+                                        answer:
+                                            type: string
+                                            description: 回答
+                                        
+                    
