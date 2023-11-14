@@ -4,7 +4,7 @@ const logger = require('koa-logger');
 const bodyParser = require('koa-bodyparser');
 const fs = require('fs');
 const path = require('path');
-const { queryDB } = require('./src/api/query');
+const { queryDB, questionPet } = require('./src/api/query');
 const { Chat } = require('./src/api/chat');
 const { addRouter } = require('./src/word')
 const koaStatic = require('koa-static');
@@ -18,12 +18,32 @@ const cors = require('koa2-cors');
 
 const app = new Koa();
 
+// 使用 cors 中间件，所有域名都可跨域请求
+app.use(cors({ origin: '*' }));
+
 app.use(async (ctx, next) => {
-  // 获取请求路径
+    // 获取请求路径
   const { path } = ctx.request;
+
+  const { uid, sid, pluginId } = ctx.query;
+
+  console.log(uid, sid, pluginId);
+
+  if (ctx.method === 'OPTIONS') {
+    ctx.set('Access-Control-Allow-Origin', '*');
+    ctx.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    ctx.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    ctx.status = 200;
+    return;
+  }
+
   // 如果请求路径以/static/pages/开头，则进行重写
   if (path.includes('/.well-known/')) {
     ctx.request.path = path.replace('/.well-known/', '/well-known/');
+  } else if (path.includes('/ai-plugin.json')) {
+    ctx.request.path = '/well-known/ai-plugin.json'
+  } else if (path.includes('/openapi.yaml')) {
+    ctx.request.path = '/well-known/openapi.yaml'
   }
 
   // 继续处理下一个中间件
@@ -34,17 +54,12 @@ app.use(async (ctx, next) => {
 // 使用 koa-static 中间件
 app.use(koaStatic(staticPath));
 
-// 使用 cors 中间件
-app.use(cors({ origin: 'https://yiyan.baidu.com' }));
-app.use(
-  cors({
-    origin: '*',
-    credentials: true, // 如果需要发送身份凭证，设置为true
-  })
-);
 
 // 添加wordService
 addRouter(router);
+
+// 测试百度文心一言插件
+router.all('/questionPet', questionPet);
 
 // 更新计数
 router.all('/api/search', async (ctx) => {

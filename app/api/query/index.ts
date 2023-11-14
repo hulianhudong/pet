@@ -4,6 +4,7 @@ import { textEmbedding } from '../../modules/dochain/db/util';
 import Zilliz from '../../modules/dochain/db/Zillis';
 
 import { victor_conf } from '../../modules/dochain/config';
+import { Context } from 'koa';
 
 const { COLLECTION } = victor_conf;
 const db = new Zilliz(COLLECTION);
@@ -51,3 +52,20 @@ export const APIHandler = async (ctx: any) => {
   const result = await queryDB(content);
   ctx.body = JSON.stringify({ result });
 };
+
+export const questionPet =  async (ctx: any) => {
+  const { question = '猫' } = Object.assign({}, ctx.query, ctx.request.body);
+  const { results } = await (0, exports.queryDB)(question);
+  const knowledge = results.map((m:any) => {
+      return m.metadata.content
+  }).join('\n');
+  const prompt = `你是一名专业的，有耐心的宠物医生，请参考以下关于宠物护理相关的知识，用专业的医生身份回答用户提出的问题。
+
+参考知识:
+  ${knowledge}
+
+用户问题：${question}
+  `;
+  // API返回字段"prompt"有特殊含义：开发者可以通过调试它来调试输出效果
+  ctx.body = { question: question, prompt }
+}

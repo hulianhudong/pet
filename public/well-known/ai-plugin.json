@@ -5,13 +5,13 @@
     "description_for_human": "你的宠物问诊专家",
     "description_for_model": "帮助你搭建你的私人宠物专家知识库",
     "auth": {
-        "type": "none"
+        "type": "user_http"
     },
     "api":{
         "type": "openapi",
-        "url": "http://127.0.0.1:3000/.well-known/openapi.yaml"
+        "url": "https://pet.hulianhudong.cn/well-known/openapi.yaml"
     },
-    "logo_url": "http://127.0.0.1:3000/logo.png",
-    "contact_email": "support@example.com",
-    "legal_info_url": "http://www.example.com/legal"
+    "logo_url": "https://pet.hulianhudong.cn/logo.png",
+    "contact_email": "linkwisdom@qq.com",
+    "legal_info_url": "http://www.hulianhudong.cn/legal"
 }

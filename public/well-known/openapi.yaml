@@ -4,8 +4,25 @@ info:
     description: 帮助你搭建你的私人宠物专家知识库。
     version: "v1"
 servers:
-    - url: http://127.0.0.1:3000
+    - url: https://pet.hulianhudong.cn
 paths:
+    /questionPet:
+        post:
+            operationId: questionPet
+            summary: 宠物生病问诊，生病怎么办
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/questionPet"
+            responses:
+                "200":
+                    description: 句子生成成功
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/responseSentences"
     /get_wordbook:
         get:
             operationId: getWordbook
@@ -94,6 +111,13 @@ components:
                 word:
                     type: string
                     description: 需要删除的单词
+        questionPet:
+            type: object
+            required: [question]
+            properties:
+                question:
+                    type: string
+                    description: 生病了怎么办
         generateSentences:
             type: object
             required: [word_number]

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.APIHandler = exports.queryRelated = exports.queryDB = void 0;
+exports.questionPet = exports.APIHandler = exports.queryRelated = exports.queryDB = void 0;
 const milvus2_sdk_node_1 = require("@zilliz/milvus2-sdk-node");
 const util_1 = require("../../modules/dochain/db/util");
 const Zillis_1 = __importDefault(require("../../modules/dochain/db/Zillis"));
@@ -46,3 +46,20 @@ const APIHandler = async (ctx) => {
     ctx.body = JSON.stringify({ result });
 };
 exports.APIHandler = APIHandler;
+const questionPet = async (ctx) => {
+    const { question = '猫' } = Object.assign({}, ctx.query, ctx.request.body);
+    const { results } = await (0, exports.queryDB)(question);
+    const knowledge = results.map((m) => {
+        return m.metadata.content;
+    }).join('\n');
+    const prompt = `你是一名专业的，有耐心的宠物医生，请参考以下关于宠物护理相关的知识，用专业的医生身份回答用户提出的问题。
+
+参考知识:
+  ${knowledge}
+
+用户问题：${question}
+  `;
+    // API返回字段"prompt"有特殊含义：开发者可以通过调试它来调试输出效果
+    ctx.body = { question: question, prompt };
+};
+exports.questionPet = questionPet;
