@@ -19,7 +19,7 @@
     "axios": "^1.6.0",
     "body-parser": "^1.19.1",
     "chromadb": "^1.5.11",
-    "dochain": "^1.0.5",
+    "cohere-ai": "^7.4.0",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
     "koa-jwt": "^4.0.4",
