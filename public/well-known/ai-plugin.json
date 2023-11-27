@@ -5,7 +5,7 @@
     "description_for_human": "你的宠物问诊专家",
     "description_for_model": "帮助你搭建你的私人宠物专家知识库",
     "auth": {
-        "type": "user_http"
+        "type": "no_auth"
     },
     "api":{
         "type": "openapi",
